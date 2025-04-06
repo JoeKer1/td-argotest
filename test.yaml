@@ -1,0 +1,82 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  annotations:
+    kub: |
+      {"apiVersion":"argoproj.io/v1alpha1","kind":"ApplicationSet","metadata":{"annotations":{},"labels":{"argocd.argoproj.io/instance":"cluster-addons"},"name":"external-dns-appset","namespace":"argocd"},"spec":{"generators":[{"matrix":{"generators":[{"merge":{"generators":[{"clusters":{"values":{"chart_version":"1.14.5"}}},{"clusters":{"selector":{"matchLabels":{"environment":"staging"}},"values":{"chart_version":"1.14.5"}}},{"clusters":{"selector":{"matchLabels":{"environment":"production"}},"values":{"chart_version":"1.14.5"}}}],"mergeKeys":["name"]}},{"git":{"directories":[{"path":"gitops-bridge/environments/*/external-dns"}],"repoURL":"https://github.com/JoeKer1/td-argotest.git","revision":"main"}}],"mergeKeys":["name","path.components.2"]}}],"template":{"metadata":{"annotations":null,"name":"{{name}}-externaldns"},"spec":{"destination":{"namespace":"ingress-nginx","server":"{{server}}"},"project":"default","sources":[{"ref":"values","repoURL":"{{metadata.annotations.addons_repo_url}}","targetRevision":"main"},{"chart":"external-dns","helm":{"ignoreMissingValueFiles":true,"valueFiles":["$values/gitops-bridge/environments/default/external-dns/values.yaml","$values/gitops-bridge/environments/{{name}}/external-dns/values.yaml"]},"releaseName":"external-dns","repoURL":"https://kubernetes-sigs.github.io/external-dns","targetRevision":"{{values.chart_version}}"}],"syncPolicy":{"automated":{"prune":true,"selfHeal":true},"syncOptions":["CreateNamespace=true"]}}}}}
+  creationTimestamp: "2025-04-06T22:02:28Z"
+  generation: 1
+  labels:
+    argocd.argoproj.io/instance: cluster-addons
+  name: external-dns-appset
+  namespace: argocd
+  resourceVersion: "24197"
+  uid: c8e8b721-6b1c-4f41-8557-79287b2799c8
+spec:
+  generators:
+  - matrix:
+      mergeKeys:
+        - name
+        - path.components.2
+      generators:
+        - merge:
+            mergeKeys:
+              - name
+            generators:
+              - clusters:
+                  values:
+                    chart_version: 1.14.5
+              - clusters:
+                  selector:
+                    matchLabels:
+                      environment: staging
+                  values:
+                    chart_version: 1.14.5
+        - git:
+            repoURL: https://github.com/your-org/repo.git
+            revision: main
+            directories:
+              - path: gitops-bridge/environments/*/external-dns
+  template:
+    metadata:
+      name: '{{name}}-externaldns'
+    spec:
+      destination:
+        namespace: ingress-nginx
+        server: '{{server}}'
+      project: default
+      sources:
+      - ref: values
+        repoURL: '{{metadata.annotations.addons_repo_url}}'
+        targetRevision: main
+      - chart: external-dns
+        helm:
+          ignoreMissingValueFiles: true
+          valueFiles:
+          - $values/gitops-bridge/environments/default/external-dns/values.yaml
+          - $values/gitops-bridge/environments/{{name}}/external-dns/values.yaml
+        repoURL: https://kubernetes-sigs.github.io/external-dns
+        targetRevision: '{{values.chart_version}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
+status:
+  conditions:
+  - lastTransitionTime: "2025-04-06T22:02:28Z"
+    message: Successfully generated parameters for all Applications
+    reason: ApplicationSetUpToDate
+    status: "False"
+    type: ErrorOccurred
+  - lastTransitionTime: "2025-04-06T22:02:28Z"
+    message: Successfully generated parameters for all Applications
+    reason: ParametersGenerated
+    status: "True"
+    type: ParametersGenerated
+  - lastTransitionTime: "2025-04-06T22:02:28Z"
+    message: ApplicationSet up to date
+    reason: ApplicationSetUpToDate
+    status: "True"
+    type: ResourcesUpToDate
