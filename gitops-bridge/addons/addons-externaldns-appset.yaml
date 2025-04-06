@@ -23,7 +23,7 @@ spec:
                   values:
                     chart_version: 1.14.5
         - git:
-            repoURL: https://github.com/your-org/repo.git
+            repoURL: https://github.com/JoeKer1/td-argotest.git
             revision: main
             directories:
               - path: gitops-bridge/environments/*/external-dns
