@@ -5,7 +5,7 @@ metadata:
 spec:
   generators:
     - matrix:
-        mergeKeys: ["name", "path.components.2"]
+        mergeKeys: ["name", "path.components.1"]
         generators:
           - merge:
               mergeKeys: ["name"]
@@ -33,6 +33,7 @@ spec:
   template:
     metadata:
       name: '{{name}}-externaldns'
+      annotations: 
     spec:
       project: default
       destination:
