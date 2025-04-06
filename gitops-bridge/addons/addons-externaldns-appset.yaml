@@ -5,7 +5,7 @@ metadata:
 spec:
   generators:
     - matrix:
-        mergeKeys: ["name", "path.components.1"]
+        mergeKeys: ["name", "path.components.2"]
         generators:
           - merge:
               mergeKeys: ["name"]
