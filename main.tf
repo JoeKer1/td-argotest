@@ -22,7 +22,7 @@ locals {
     managed-by           = "argocd.argoproj.io"
     argocd_namespace     = "argocd"
     addons_repo_url      = "https://github.com/JoeKer1/td-argotest.git"
-    addons_repo_path     = "gitops-brdige/addons"
+    addons_repo_path     = "gitops-bridge/addons"
     addons_repo_revision = "main"
     addons_name          = "addons-repo"
     addons_repo_basepath = ""

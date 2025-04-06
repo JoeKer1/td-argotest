@@ -45,11 +45,13 @@ spec:
           ref: values
         - repoURL: https://kubernetes-sigs.github.io/external-dns
           chart: external-dns
+          releaseName: 'external-dns'
+          ignoreMissingValueFiles: true
           targetRevision: '{{values.chart_version}}'
           helm:
             valueFiles:
-              - $values/environments/default/external-dns/values.yaml                    # default values
-              - $values/environments/clusters/{{name}}/external-dns/values.yaml          # cluster-specific
+              - $values/gitops-bridge/environments/default/external-dns/values.yaml                    # default values
+              - $values/gitops-bridge/environments/clusters/{{name}}/external-dns/values.yaml          # cluster-specific
       syncPolicy:
         automated:
           prune: true

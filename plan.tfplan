@@ -1,0 +1,155 @@
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  [32m+[0m create[0m
+
+Terraform will perform the following actions:
+
+[1m  # helm_release.argocd[0m will be created
+[0m  [32m+[0m[0m resource "helm_release" "argocd" {
+      [32m+[0m[0m atomic                     = false
+      [32m+[0m[0m chart                      = "argo-cd"
+      [32m+[0m[0m cleanup_on_fail            = false
+      [32m+[0m[0m create_namespace           = true
+      [32m+[0m[0m dependency_update          = false
+      [32m+[0m[0m disable_crd_hooks          = false
+      [32m+[0m[0m disable_openapi_validation = false
+      [32m+[0m[0m disable_webhooks           = false
+      [32m+[0m[0m force_update               = false
+      [32m+[0m[0m id                         = (known after apply)
+      [32m+[0m[0m lint                       = false
+      [32m+[0m[0m manifest                   = (known after apply)
+      [32m+[0m[0m max_history                = 0
+      [32m+[0m[0m metadata                   = (known after apply)
+      [32m+[0m[0m name                       = "argo-cd"
+      [32m+[0m[0m namespace                  = "argocd"
+      [32m+[0m[0m pass_credentials           = false
+      [32m+[0m[0m recreate_pods              = false
+      [32m+[0m[0m render_subchart_notes      = true
+      [32m+[0m[0m replace                    = false
+      [32m+[0m[0m repository                 = "https://argoproj.github.io/argo-helm"
+      [32m+[0m[0m reset_values               = false
+      [32m+[0m[0m reuse_values               = false
+      [32m+[0m[0m skip_crds                  = false
+      [32m+[0m[0m status                     = "deployed"
+      [32m+[0m[0m timeout                    = 300
+      [32m+[0m[0m verify                     = false
+      [32m+[0m[0m version                    = "7.8.2"
+      [32m+[0m[0m wait                       = true
+      [32m+[0m[0m wait_for_jobs              = false
+
+      [32m+[0m[0m set {
+          [32m+[0m[0m name  = "configs.secret.argocdServerAdminPassword"
+          [32m+[0m[0m value = "$2a$10$h9Eb./X68WocvlfDJBRh.uC3bo0AozLR4aO/0emB2RKFOWxuIsPyS"
+        }
+    }
+
+[1m  # helm_release.bootstrap["addons"][0m will be created
+[0m  [32m+[0m[0m resource "helm_release" "bootstrap" {
+      [32m+[0m[0m atomic                     = false
+      [32m+[0m[0m chart                      = "./charts/resources"
+      [32m+[0m[0m cleanup_on_fail            = false
+      [32m+[0m[0m create_namespace           = false
+      [32m+[0m[0m dependency_update          = false
+      [32m+[0m[0m disable_crd_hooks          = false
+      [32m+[0m[0m disable_openapi_validation = false
+      [32m+[0m[0m disable_webhooks           = false
+      [32m+[0m[0m force_update               = false
+      [32m+[0m[0m id                         = (known after apply)
+      [32m+[0m[0m lint                       = false
+      [32m+[0m[0m manifest                   = (known after apply)
+      [32m+[0m[0m max_history                = 0
+      [32m+[0m[0m metadata                   = (known after apply)
+      [32m+[0m[0m name                       = "addons"
+      [32m+[0m[0m namespace                  = "argocd"
+      [32m+[0m[0m pass_credentials           = false
+      [32m+[0m[0m recreate_pods              = false
+      [32m+[0m[0m render_subchart_notes      = true
+      [32m+[0m[0m replace                    = false
+      [32m+[0m[0m reset_values               = false
+      [32m+[0m[0m reuse_values               = false
+      [32m+[0m[0m skip_crds                  = false
+      [32m+[0m[0m status                     = "deployed"
+      [32m+[0m[0m timeout                    = 300
+      [32m+[0m[0m values                     = [
+          [32m+[0m[0m <<-EOT
+                resources:
+                  - apiVersion: argoproj.io/v1alpha1
+                    kind: ApplicationSet
+                    metadata:
+                      name: cluster-addons
+                      namespace: argocd
+                    spec:
+                      syncPolicy:
+                        preserveResourcesOnDeletion: true
+                      generators:
+                        - clusters:
+                            selector:
+                              matchExpressions:
+                                - key: akuity.io/argo-cd-cluster-name
+                                  operator: NotIn
+                                  values: [in-cluster]
+                      template:
+                        metadata:
+                          name: cluster-addons
+                        spec:
+                          project: default
+                          source:
+                            repoURL: '{{metadata.annotations.addons_repo_url}}'
+                            path: '{{metadata.annotations.addons_repo_basepath}}{{metadata.annotations.addons_repo_path}}'
+                            targetRevision: '{{metadata.annotations.addons_repo_revision}}'
+                            directory:
+                              recurse: true
+                              exclude: exclude/*
+                          destination:
+                            namespace: argocd
+                            name: '{{name}}'
+                          syncPolicy:
+                            automated: {}
+            EOT,
+        ]
+      [32m+[0m[0m verify                     = false
+      [32m+[0m[0m version                    = "1.0.0"
+      [32m+[0m[0m wait                       = true
+      [32m+[0m[0m wait_for_jobs              = false
+    }
+
+[1m  # kubernetes_secret_v1.cluster[0m will be created
+[0m  [32m+[0m[0m resource "kubernetes_secret_v1" "cluster" {
+      [32m+[0m[0m data                           = (sensitive value)
+      [32m+[0m[0m id                             = (known after apply)
+      [32m+[0m[0m type                           = "Opaque"
+      [32m+[0m[0m wait_for_service_account_token = true
+
+      [32m+[0m[0m metadata {
+          [32m+[0m[0m annotations      = {
+              [32m+[0m[0m "addons_name"          = "addons-repo"
+              [32m+[0m[0m "addons_repo_basepath" = ""
+              [32m+[0m[0m "addons_repo_path"     = "gitops-brdige/addons"
+              [32m+[0m[0m "addons_repo_revision" = "main"
+              [32m+[0m[0m "addons_repo_url"      = "https://github.com/JoeKer1/td-argotest.git"
+              [32m+[0m[0m "argocd_namespace"     = "argocd"
+              [32m+[0m[0m "cluster_name"         = "argodemo"
+              [32m+[0m[0m "environment"          = "dev"
+              [32m+[0m[0m "managed-by"           = "argocd.argoproj.io"
+            }
+          [32m+[0m[0m generation       = (known after apply)
+          [32m+[0m[0m labels           = {
+              [32m+[0m[0m "argocd.argoproj.io/secret-type" = "cluster"
+              [32m+[0m[0m "cluster_name"                   = "argodemo"
+              [32m+[0m[0m "enable_argocd"                  = "true"
+              [32m+[0m[0m "environment"                    = "dev"
+            }
+          [32m+[0m[0m name             = "argodemo"
+          [32m+[0m[0m namespace        = "argocd"
+          [32m+[0m[0m resource_version = (known after apply)
+          [32m+[0m[0m uid              = (known after apply)
+        }
+    }
+
+[1mPlan:[0m 3 to add, 0 to change, 0 to destroy.
+[0m[90m
+─────────────────────────────────────────────────────────────────────────────[0m
+
+Note: You didn't use the -out option to save this plan, so Terraform can't
+guarantee to take exactly these actions if you run "terraform apply" now.
