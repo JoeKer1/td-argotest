@@ -3,14 +3,14 @@ kind: ApplicationSet
 metadata:
   annotations:
     kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"argoproj.io/v1alpha1","kind":"ApplicationSet","metadata":{"annotations":{},"labels":{"argocd.argoproj.io/instance":"cluster-addons"},"name":"external-dns-appset","namespace":"argocd"},"spec":{"generators":[{"matrix":{"generators":[{"merge":{"generators":[{"clusters":{"values":{"chart_version":"1.14.5"}}},{"clusters":{"selector":{"matchLabels":{"environment":"staging"}},"values":{"chart_version":"1.14.5"}}}],"mergeKeys":["name"]}},{"git":{"directories":[{"path":"gitops-bridge/environments/*/external-dns"}],"repoURL":"https://github.com/your-org/repo.git","revision":"main"}}],"mergeKeys":["name","path.components.2"]}}],"template":{"metadata":{"annotations":null,"name":"{{name}}-externaldns"},"spec":{"destination":{"namespace":"ingress-nginx","server":"{{server}}"},"project":"default","sources":[{"ref":"values","repoURL":"{{metadata.annotations.addons_repo_url}}","targetRevision":"main"},{"chart":"external-dns","helm":{"ignoreMissingValueFiles":true,"releaseName":"external-dns","valueFiles":["$values/gitops-bridge/environments/default/external-dns/values.yaml","$values/gitops-bridge/environments/{{name}}/external-dns/values.yaml"]},"repoURL":"https://kubernetes-sigs.github.io/external-dns","targetRevision":"{{values.chart_version}}"}],"syncPolicy":{"automated":{"prune":true,"selfHeal":true},"syncOptions":["CreateNamespace=true"]}}}}}
+      {"apiVersion":"argoproj.io/v1alpha1","kind":"ApplicationSet","metadata":{"annotations":{},"labels":{"argocd.argoproj.io/instance":"cluster-addons"},"name":"external-dns-appset","namespace":"argocd"},"spec":{"generators":[{"matrix":{"generators":[{"merge":{"generators":[{"clusters":{"values":{"chart_version":"1.14.5"}}},{"clusters":{"selector":{"matchLabels":{"environment":"staging"}},"values":{"chart_version":"1.14.5"}}}],"mergeKeys":["name"]}},{"git":{"directories":[{"path":"gitops-bridge/environments/*/external-dns"}],"repoURL":"https://github.com/JoeKer1/td-argotest.git","revision":"main"}}],"mergeKeys":["name","path.components.2"]}}],"template":{"metadata":{"annotations":null,"name":"{{name}}-externaldns"},"spec":{"destination":{"namespace":"ingress-nginx","server":"{{server}}"},"project":"default","sources":[{"ref":"values","repoURL":"{{metadata.annotations.addons_repo_url}}","targetRevision":"main"},{"chart":"external-dns","helm":{"ignoreMissingValueFiles":true,"releaseName":"external-dns","valueFiles":["$values/gitops-bridge/environments/default/external-dns/values.yaml","$values/gitops-bridge/environments/{{name}}/external-dns/values.yaml"]},"repoURL":"https://kubernetes-sigs.github.io/external-dns","targetRevision":"{{values.chart_version}}"}],"syncPolicy":{"automated":{"prune":true,"selfHeal":true},"syncOptions":["CreateNamespace=true"]}}}}}
   creationTimestamp: "2025-04-06T23:45:57Z"
-  generation: 2
+  generation: 3
   labels:
     argocd.argoproj.io/instance: cluster-addons
   name: external-dns-appset
   namespace: argocd
-  resourceVersion: "25105"
+  resourceVersion: "25352"
   uid: 5413a795-74cb-430c-91bb-44f40d2376ca
 spec:
   generators:
@@ -32,7 +32,7 @@ spec:
       - git:
           directories:
           - path: gitops-bridge/environments/*/external-dns
-          repoURL: https://github.com/your-org/repo.git
+          repoURL: https://github.com/JoeKer1/td-argotest.git
           revision: main
   template:
     metadata:
@@ -63,30 +63,18 @@ spec:
         - CreateNamespace=true
 status:
   conditions:
-  - lastTransitionTime: "2025-04-06T23:54:16Z"
-    message: 'failed to get params for second generator in the matrix generator: child
-      generator returned an error on parameter generation: error generating params
-      from git: error getting directories from repo: error retrieving Git Directories:
-      rpc error: code = Internal desc = unable to resolve git revision : failed to
-      list refs: authentication required: Repository not found.'
-    reason: ApplicationGenerationFromParamsError
-    status: "True"
+  - lastTransitionTime: "2025-04-06T23:57:14Z"
+    message: Successfully generated parameters for all Applications
+    reason: ApplicationSetUpToDate
+    status: "False"
     type: ErrorOccurred
-  - lastTransitionTime: "2025-04-06T23:54:16Z"
-    message: 'failed to get params for second generator in the matrix generator: child
-      generator returned an error on parameter generation: error generating params
-      from git: error getting directories from repo: error retrieving Git Directories:
-      rpc error: code = Internal desc = unable to resolve git revision : failed to
-      list refs: authentication required: Repository not found.'
-    reason: ErrorOccurred
-    status: "False"
+  - lastTransitionTime: "2025-04-06T23:57:14Z"
+    message: Successfully generated parameters for all Applications
+    reason: ParametersGenerated
+    status: "True"
     type: ParametersGenerated
-  - lastTransitionTime: "2025-04-06T23:54:16Z"
-    message: 'failed to get params for second generator in the matrix generator: child
-      generator returned an error on parameter generation: error generating params
-      from git: error getting directories from repo: error retrieving Git Directories:
-      rpc error: code = Internal desc = unable to resolve git revision : failed to
-      list refs: authentication required: Repository not found.'
-    reason: ApplicationGenerationFromParamsError
-    status: "False"
+  - lastTransitionTime: "2025-04-06T23:57:14Z"
+    message: ApplicationSet up to date
+    reason: ApplicationSetUpToDate
+    status: "True"
     type: ResourcesUpToDate
