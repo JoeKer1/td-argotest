@@ -24,7 +24,7 @@ spec:
                       matchLabels:
                         environment: staging
                     values:
-                      chart_version: 1.14.4       
+                      chart_version: 1.14.4
   template:
     metadata:
       name: '{{name}}-externaldns'
@@ -45,7 +45,7 @@ spec:
             ignoreMissingValueFiles: true
             valueFiles:
               - $values/gitops-bridge/environments/default/external-dns/values.yaml
-              - $values/gitops-bridge/environments/{{path.path}}/external-dns/values.yaml
+              - $values/gitops-bridge/environments/{{path.basename}}/external-dns/values.yaml
       syncPolicy:
         automated:
           prune: true
