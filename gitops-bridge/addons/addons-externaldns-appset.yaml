@@ -6,10 +6,12 @@ metadata:
 spec:
   generators:
     - matrix:
-        mergeKeys:
-          - name
-          - path.components.2
         generators:
+          - git:
+              repoURL: https://github.com/JoeKer1/td-argotest.git
+              revision: main
+              directories:
+                - path: gitops-bridge/environments/*/external-dns
           - merge:
               mergeKeys:
                 - name
@@ -22,12 +24,7 @@ spec:
                       matchLabels:
                         environment: staging
                     values:
-                      chart_version: 1.14.5
-          - git:
-              repoURL: https://github.com/JoeKer1/td-argotest.git
-              revision: main
-              directories:
-                - path: gitops-bridge/environments/*/external-dns
+                      chart_version: 1.14.4       
   template:
     metadata:
       name: '{{name}}-externaldns'
@@ -48,7 +45,7 @@ spec:
             ignoreMissingValueFiles: true
             valueFiles:
               - $values/gitops-bridge/environments/default/external-dns/values.yaml
-              - $values/gitops-bridge/environments/{{name}}/external-dns/values.yaml
+              - $values/gitops-bridge/environments/{{path.path}}/external-dns/values.yaml
       syncPolicy:
         automated:
           prune: true
