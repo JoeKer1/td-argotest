@@ -4,6 +4,8 @@ metadata:
   name: external-dns-appset
   namespace: argocd
 spec:
+  syncPolicy:
+    preserveResourcesOnDeletion: false
   generators:
     - matrix:
         generators:
